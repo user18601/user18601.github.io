@@ -10,19 +10,13 @@
 <button onclick="myFunction()">Click me</button>
 
 <p id="demo"></p>
-<p>crisps.length</p>
+<p>crisps full array</p>
 
 <script>
 function myFunction() {
-  var crisps = [
-    "Walkers salt and vinegar",
-    "Walkers salted",
-    "Hoola hoops",
-    "Chipsticks",
-    "The special salted ones from the post office"
-  ];
+  var crisps = ["Walkers salt and vinegar", "Walkers salted", "Hoola hoops", "Chipsticks", "The special salted ones from the post office"];
   var selectedType = crisps[Math.floor(Math.random()*crisps.length);
-  document.getElementById("demo").innerHTML = crisps.length;
+  document.getElementById("demo").innerHTML = crisps;
 }
 </script>
 
