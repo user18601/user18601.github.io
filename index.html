@@ -14,7 +14,8 @@
 <script>
 function myFunction() {
   var crisps = ['salt','salt and v'];
-  document.getElementById("demo").innerHTML = "chopsticks";
+  var selectedType = crisps[Math.floor(Math.random()*crisps.length)
+  document.getElementById("demo").innerHTML = selectedType;
 }
 </script>
 
