@@ -10,14 +10,17 @@
 <button onclick="myFunction()">I want crisps</button>
 
 <p id="demo"></p>
-Walkers?
-<img src="img/05768_a_1.jpg" alt="hoola" width="500" height="600">
+No src
+<img id="pic" src="" alt="crisp" width="500" height="600">
 
 <script>
 function myFunction() {
   const crisps = ["Walkers salt and vinegar", "Walkers salted", "Hoola hoops", "Chipsticks", "The special salted ones from the post office"];
+  const crispsPics = ["img/05768_a_1.jpg"];
   const selectedType = crisps[Math.floor(Math.random()*crisps.length)];
   document.getElementById("demo").innerHTML = selectedType;
+  document.getElementById("pic").src = crispsPics[0];
+  
 }
 </script>
 
