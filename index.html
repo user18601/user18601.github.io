@@ -10,16 +10,17 @@
 <button onclick="myFunction()">I want crisps</button>
 
 <p id="demo"></p>
-No src only one pic
+No src two pics
 <img id="pic" src="" alt="crisp" width="500" height="600">
 
 <script>
 function myFunction() {
   const crisps = ["Walkers salt and vinegar", "Walkers salted", "Hoola hoops", "Chipsticks", "The special salted ones from the post office"];
-  const crispsPics = ["img/05768_a_1.jpg"];
-  const selectedType = crisps[Math.floor(Math.random()*crisps.length)];
+  const crispsPics = ["img/05768_a_1.jpg", "", "", "img/61J3RDU44fL._AC_SX679_PIbundle-8,TopRight,0,0_SH20_.jpg", ""];
+  const index = Math.floor(Math.random()*crisps.length);
+  const selectedType = crisps[index];
   document.getElementById("demo").innerHTML = selectedType;
-  document.getElementById("pic").src = crispsPics[0];
+  document.getElementById("pic").src = crispsPics[index];
   
 }
 </script>
