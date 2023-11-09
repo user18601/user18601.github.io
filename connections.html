@@ -56,6 +56,11 @@
             text-align: center;
             font-size: 18px;
         }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -74,7 +79,7 @@
             juice: ["Lemon", "Lime", "Orange", "Tomato"]
         };
 
-        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightblue" }; /* Adjusted color for "juice" category */
+        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightsalmon" }; /* Adjusted color for "juice" category */
 
         let selectedBoxes = [], confirmedBoxes = [], mistakesRemaining = 4;
 
@@ -95,17 +100,19 @@
         }
 
         function selectBox(box) {
-            if (confirmedBoxes.includes(box) || selectedBoxes.length === 4) return;
+            if (confirmedBoxes.includes(box) || selectedBoxes.length === 4 || mistakesRemaining === 0) return;
             selectedBoxes.includes(box) ? (selectedBoxes = selectedBoxes.filter(selectedBox => selectedBox !== box), box.classList.remove("selected")) : (selectedBoxes.push(box), box.classList.add("selected"));
             checkSubmitButton();
         }
 
         function submitSelection() {
+            if (mistakesRemaining === 0) return;
             const correctCategory = Object.entries(categories).find(([category, words]) => selectedBoxes.every(box => words.includes(box.textContent)));
             if (correctCategory) {
                 handleCorrectSelection(correctCategory[0]);
                 if (confirmedBoxes.length === Object.values(categories).flat().length) {
                     alert("Congratulations! You've guessed all categories. You win!");
+                    disableGame();
                 }
             } else {
                 handleIncorrectSelection();
@@ -129,6 +136,7 @@
             if (mistakesRemaining === 0) {
                 document.getElementById("grid").style.backgroundColor = "lightgray";
                 alert("Game Over! You have run out of mistakes.");
+                disableGame();
             } else if (mistakesRemaining > 0) {
                 const oneAwayCategories = getOneAwayCategories();
                 oneAwayCategories.length > 0 ? alert("Incorrect! You were 1 away.") : alert("Incorrect! Try again.");
@@ -149,7 +157,12 @@
             return Object.entries(categories).filter(([category, words]) => selectedBoxes.some(box => words.includes(box.textContent)) && selectedBoxes.length === 3).map(([category]) => getCategoryText(category));
         }
 
-        function checkSubmitButton() { document.getElementById("submitBtn").disabled = selectedBoxes.length !== 4; }
+        function checkSubmitButton() { document.getElementById("submitBtn").disabled = selectedBoxes.length !== 4 || mistakesRemaining === 0; }
+
+        function disableGame() {
+            document.getElementById("grid").classList.add("disabled");
+            document.getElementById("submitBtn").classList.add("disabled");
+        }
 
         initializeGrid();
     </script>
