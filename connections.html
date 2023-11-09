@@ -29,15 +29,14 @@
             text-align: center;
             cursor: pointer;
             background-color: lightgray;
-            color: black; /* Set text color to black */
+            color: black;
             border: 1px solid #ccc;
             user-select: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
         }
 
         .box.selected {
-            background-color: lightblue;
-            color: black;
+            border: 2px dashed lightgreen;
         }
 
         .box.confirmed {
@@ -79,7 +78,7 @@
             juice: ["Lemon", "Lime", "Orange", "Tomato"]
         };
 
-        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightsalmon" }; /* Adjusted color for "juice" category */
+        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightsalmon" };
 
         let selectedBoxes = [], confirmedBoxes = [], mistakesRemaining = 4;
 
@@ -139,7 +138,7 @@
                 disableGame();
             } else if (mistakesRemaining > 0) {
                 const oneAwayCategories = getOneAwayCategories();
-                oneAwayCategories.length > 0 ? alert("Incorrect! You were 1 away.") : alert("Incorrect! Try again.");
+                oneAwayCategories.length > 0 ? alert("Incorrect! You were 1 away from " + oneAwayCategories) : alert("Incorrect! Try again.");
             }
         }
 
