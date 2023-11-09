@@ -23,41 +23,41 @@ function myFunction() {
   
 }</script>
 
-  <style>
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-    .box {
-      width: 100px;
-      height: 100px;
-      border: 1px solid #000;
-      text-align: center;
-      line-height: 100px;
-      cursor: pointer;
-    }
-    .selected {
-      background-color: lightblue;
-    }
-    .nicknames {
-      background-color: #ffcccb;
-    }
-    .breakfast {
-      background-color: #ffebcd;
-    }
-    .farts {
-      background-color: #c0c0c0;
-    }
-    .juice {
-      background-color: #d3ffd3;
-    }
-    #submit {
-      margin-top: 10px;
-      padding: 5px 10px;
-      font-size: 16px;
-    }
-  </style>
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .box {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
+    text-align: center;
+    line-height: 100px;
+    cursor: pointer;
+  }
+  .selected {
+    background-color: lightblue;
+  }
+  .nicknames {
+    background-color: #ffcccb;
+  }
+  .breakfast {
+    background-color: #ffebcd;
+  }
+  .farts {
+    background-color: #c0c0c0;
+  }
+  .juice {
+    background-color: #d3ffd3;
+  }
+  #submit {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+</style>
 
 <h1>Connections game for T dog</h1>
 
@@ -69,7 +69,7 @@ function myFunction() {
   <!-- Boxes will be dynamically shuffled using JavaScript -->
 </div>
 
-<button id="submit" onclick="checkSelection()">Submit</button>
+<button id="submit" onclick="checkSelection()" disabled>Submit</button>
 
 <div id="categoryText"></div>
 
@@ -186,43 +186,9 @@ function myFunction() {
 
   function showCategories() {
     const grid = document.getElementById('grid');
-    for (const box of grid.children) {
-      for (const [category, words] of Object.entries(categories)) {
-        if (words.includes(box.textContent)) {
-          box.classList.add(category);
-          break;
-        }
-      }
-    }
-    clearCategoryText();
-  }
-
-  function displayCategoryText(text, category) {
-    const categoryTextElement = document.getElementById('categoryText');
-    categoryTextElement.textContent = text;
-    categoryTextElement.style.color = getCategoryColor(category);
-  }
-
-  function clearCategoryText() {
-    document.getElementById('categoryText').textContent = '';
-  }
-
-  function getCategoryColor(category) {
-    switch (category) {
-      case "nicknames":
-        return '#ffcccb';
-      case "breakfast":
-        return '#ffebcd';
-      case "farts":
-        return '#c0c0c0';
-      case "juice":
-        return '#d3ffd3';
-      default:
-        return '';
-    }
-  }
-</script>
+    for (const box of grid.children)
   
+      </script>
 
 </body>
 </html>
