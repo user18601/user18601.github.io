@@ -21,9 +21,8 @@ function myFunction() {
   document.getElementById("demo").innerHTML = selectedType;
   document.getElementById("pic").src = crispsPics[index];
   
-}
+}</script>
 
-</script>
   <style>
     .grid {
       display: grid;
@@ -41,49 +40,66 @@ function myFunction() {
     .selected {
       background-color: lightblue;
     }
+    .nicknames {
+      background-color: #ffcccb;
+    }
+    .breakfast {
+      background-color: #ffebcd;
+    }
+    .farts {
+      background-color: #c0c0c0;
+    }
+    .juice {
+      background-color: #d3ffd3;
+    }
     #submit {
       margin-top: 10px;
       padding: 5px 10px;
       font-size: 16px;
-      cursor: not-allowed;
     }
   </style>
 
-<h1><Connections 4 t dog</h1>
+<h1>Connections game for T dog</h1>
 
 <div id="mistakes-container">
   <p>Mistakes remaining: <span id="mistakes">4</span></p>
 </div>
 
 <div class="grid" id="grid">
-  <!-- Each box is given a unique id for identification -->
-  <div class="box" onclick="selectBox(this)">Goose</div>
-  <div class="box" onclick="selectBox(this)">nut</div>
-  <div class="box" onclick="selectBox(this)">bestie</div>
-  <div class="box" onclick="selectBox(this)">chicken</div>
-  <div class="box" onclick="selectBox(this)">kidney</div>
-  <div class="box" onclick="selectBox(this)">chickpea</div>
-  <div class="box" onclick="selectBox(this)">black eyed</div>
-  <div class="box" onclick="selectBox(this)">butter</div>
-  <div class="box" onclick="selectBox(this)">Egg</div>
-  <div class="box" onclick="selectBox(this)">silent</div>
-  <div class="box" onclick="selectBox(this)">deadly</div>
-  <div class="box" onclick="selectBox(this)">squelchy</div>
-  <div class="box" onclick="selectBox(this)">Lemon</div>
-  <div class="box" onclick="selectBox(this)">lime</div>
-  <div class="box" onclick="selectBox(this)">orange</div>
-  <div class="box" onclick="selectBox(this)">tomato</div>
+  <!-- Boxes will be dynamically shuffled using JavaScript -->
 </div>
 
 <button id="submit" onclick="checkSelection()">Submit</button>
+
+<div id="categoryText"></div>
 
 <script>
   let selectedBoxes = [];
   let mistakesRemaining = 4;
 
+  const words = ["Goose", "nut", "bestie", "chicken", "kidney", "chickpea", "black eyed", "butter", "Egg", "silent", "deadly", "squelchy", "Lemon", "lime", "orange", "tomato"];
+
+  // Shuffle the words array using Fisher-Yates algorithm
+  for (let i = words.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [words[i], words[j]] = [words[j], words[i]];
+  }
+
+  const grid = document.getElementById('grid');
+
+  // Populate the shuffled words into the grid
+  words.forEach(word => {
+    const box = document.createElement('div');
+    box.className = 'box';
+    box.textContent = word;
+    box.onclick = () => selectBox(box);
+    grid.appendChild(box);
+  });
+
   function selectBox(box) {
     if (selectedBoxes.length < 4) {
       box.classList.toggle('selected');
+      selectedBoxes = Array.from(document.getElementsByClassName('selected'));
       updateSubmitButton();
     }
   }
@@ -113,12 +129,23 @@ function myFunction() {
     });
 
     if (selectedCategories.length === 1) {
-      alert(`Correct! You guessed the category: ${selectedCategories[0]}`);
+      const categoryText = getCategoryText(selectedCategories[0]);
+      alert(`Correct! You guessed the category: ${categoryText}`);
       selectedBoxes.forEach(box => box.classList.add(selectedCategories[0]));
+      displayCategoryText(categoryText, selectedCategories[0]);
       resetGame();
     } else {
       mistakesRemaining--;
-      const message = (mistakesRemaining === 0) ? "You've lost!" : "Incorrect. Try again.";
+
+      // Check if the user is one away from guessing 3 out of 4 words
+      const oneAway = selectedCategories.some(category => {
+        const correctWords = categories[category];
+        const selectedWords = selectedBoxes.map(box => box.textContent);
+        const correctCount = correctWords.filter(word => selectedWords.includes(word)).length;
+        return correctCount === 3;
+      });
+
+      const message = (mistakesRemaining === 0) ? "You've lost!" : (oneAway ? "Incorrect. You were one away!" : "Incorrect. Try again.");
       alert(`${message} Mistakes remaining: ${mistakesRemaining}`);
       
       if (mistakesRemaining === 0) {
@@ -131,6 +158,21 @@ function myFunction() {
     updateMistakes();
   }
 
+  function getCategoryText(category) {
+    switch (category) {
+      case "nicknames":
+        return "Nicknames: nicknames";
+      case "breakfast":
+        return "Breakfast: breakfast of champions";
+      case "farts":
+        return "Farts: types of farts";
+      case "juice":
+        return "Juice: types of juice";
+      default:
+        return "";
+    }
+  }
+
   function updateMistakes() {
     document.getElementById('mistakes').textContent = mistakesRemaining;
   }
@@ -139,6 +181,7 @@ function myFunction() {
     selectedBoxes.forEach(box => box.classList.remove('selected'));
     selectedBoxes = [];
     updateSubmitButton();
+    clearCategoryText();
   }
 
   function showCategories() {
@@ -151,9 +194,36 @@ function myFunction() {
         }
       }
     }
+    clearCategoryText();
+  }
+
+  function displayCategoryText(text, category) {
+    const categoryTextElement = document.getElementById('categoryText');
+    categoryTextElement.textContent = text;
+    categoryTextElement.style.color = getCategoryColor(category);
+  }
+
+  function clearCategoryText() {
+    document.getElementById('categoryText').textContent = '';
+  }
+
+  function getCategoryColor(category) {
+    switch (category) {
+      case "nicknames":
+        return '#ffcccb';
+      case "breakfast":
+        return '#ffebcd';
+      case "farts":
+        return '#c0c0c0';
+      case "juice":
+        return '#d3ffd3';
+      default:
+        return '';
+    }
   }
 </script>
   
+
 </body>
 </html>
 
