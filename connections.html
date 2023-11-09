@@ -29,6 +29,7 @@
             text-align: center;
             cursor: pointer;
             background-color: lightgray;
+            color: black; /* Set text color to black */
             border: 1px solid #ccc;
             user-select: none;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -73,7 +74,7 @@
             juice: ["Lemon", "Lime", "Orange", "Tomato"]
         };
 
-        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightyellow" };
+        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightblue" }; /* Adjusted color for "juice" category */
 
         let selectedBoxes = [], confirmedBoxes = [], mistakesRemaining = 4;
 
@@ -117,7 +118,7 @@
         function handleCorrectSelection(category) {
             confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
-            selectedBoxes.forEach(box => { box.classList.add("confirmed"); box.style.backgroundColor = categoryColors[category]; box.style.color = "black"; });
+            selectedBoxes.forEach(box => { box.classList.add("confirmed"); box.style.backgroundColor = categoryColors[category]; });
             alert("Correct! " + getCategoryText(category));
         }
 
