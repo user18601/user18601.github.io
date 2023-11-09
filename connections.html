@@ -62,42 +62,23 @@
     <h1>Connections Game for T Dog</h1>
     <div id="mistakes">Mistakes remaining: <span id="mistakes-count">4</span></div>
 
-    <div class="grid-container" id="grid">
-        <!-- Boxes will be dynamically added here -->
-    </div>
-
+    <div class="grid-container" id="grid"></div>
     <button class="submit-button" onclick="submitSelection()" id="submitBtn" disabled>Submit</button>
 
     <script>
-        // Word categories
         const categories = {
-            nicknames: ["Goose", "nut", "bestie", "chicken"],
-            breakfast: ["kidney", "chickpea", "black eyed", "butter"],
-            farts: ["Egg", "silent", "deadly", "squelchy"],
-            juice: ["Lemon", "lime", "orange", "tomato"]
+            nicknames: ["Goose", "Nut", "Bestie", "Chicken"],
+            breakfast: ["Kidney", "Chickpea", "Black Eyed", "Butter"],
+            farts: ["Egg", "Silent", "Deadly", "Squelchy"],
+            juice: ["Lemon", "Lime", "Orange", "Tomato"]
         };
 
-        // Colors for each category
-        const categoryColors = {
-            nicknames: "lightcyan",
-            breakfast: "lightgreen",
-            farts: "lightcoral",
-            juice: "lightyellow"
-        };
+        const categoryColors = { nicknames: "lightcyan", breakfast: "lightgreen", farts: "lightcoral", juice: "lightyellow" };
 
-        let selectedBoxes = [];
-        let confirmedBoxes = [];
-        let mistakesRemaining = 4;
+        let selectedBoxes = [], confirmedBoxes = [], mistakesRemaining = 4;
 
-        // Function to shuffle an array randomly
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
 
-        // Function to initialize the grid
         function initializeGrid() {
             const gridContainer = document.getElementById("grid");
             const boxOrder = Object.values(categories).flat();
@@ -112,67 +93,34 @@
             });
         }
 
-        // Function to handle box selection
         function selectBox(box) {
-            if (confirmedBoxes.includes(box)) {
-                return; // Cannot reselect confirmed items
-            }
-
-            if (selectedBoxes.includes(box)) {
-                // Unselect the box
-                selectedBoxes = selectedBoxes.filter(selectedBox => selectedBox !== box);
-                box.classList.remove("selected");
-            } else {
-                // Select the box
-                selectedBoxes.push(box);
-                box.classList.add("selected");
-            }
-
+            if (confirmedBoxes.includes(box) || selectedBoxes.length === 4) return;
+            selectedBoxes.includes(box) ? (selectedBoxes = selectedBoxes.filter(selectedBox => selectedBox !== box), box.classList.remove("selected")) : (selectedBoxes.push(box), box.classList.add("selected"));
             checkSubmitButton();
         }
 
-        // Function to handle submit button click
         function submitSelection() {
-            let correctCategory = null;
-
-            for (const [category, words] of Object.entries(categories)) {
-                const correctWords = selectedBoxes.every(box => words.includes(box.textContent));
-                if (correctWords) {
-                    correctCategory = category;
-                    break;
-                }
-            }
-
+            const correctCategory = Object.entries(categories).find(([category, words]) => selectedBoxes.every(box => words.includes(box.textContent)));
             if (correctCategory) {
-                handleCorrectSelection(correctCategory);
+                handleCorrectSelection(correctCategory[0]);
+                if (confirmedBoxes.length === Object.values(categories).flat().length) {
+                    alert("Congratulations! You've guessed all categories. You win!");
+                }
             } else {
                 handleIncorrectSelection();
             }
-
-            // Reset for the next round
-            selectedBoxes.forEach(box => {
-                box.classList.remove("selected");
-                if (!confirmedBoxes.includes(box)) {
-                    box.classList.remove("confirmed");
-                }
-            });
+            selectedBoxes.forEach(box => { box.classList.remove("selected"); if (!confirmedBoxes.includes(box)) box.classList.remove("confirmed"); });
             selectedBoxes = [];
             checkSubmitButton();
         }
 
-        // Function to handle correct category selection
         function handleCorrectSelection(category) {
             confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
-            selectedBoxes.forEach(box => {
-                box.classList.add("confirmed");
-                box.style.backgroundColor = categoryColors[category];
-                box.style.color = "black";
-            });
+            selectedBoxes.forEach(box => { box.classList.add("confirmed"); box.style.backgroundColor = categoryColors[category]; box.style.color = "black"; });
             alert("Correct! " + getCategoryText(category));
         }
 
-        // Function to handle incorrect selection
         function handleIncorrectSelection() {
             mistakesRemaining--;
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
@@ -182,51 +130,26 @@
                 alert("Game Over! You have run out of mistakes.");
             } else if (mistakesRemaining > 0) {
                 const oneAwayCategories = getOneAwayCategories();
-                if (oneAwayCategories.length > 0) {
-                    alert("Incorrect! You were 1 away from: " + oneAwayCategories.join(', '));
-                } else {
-                    alert("Incorrect! Try again.");
-                }
+                oneAwayCategories.length > 0 ? alert("Incorrect! You were 1 away.") : alert("Incorrect! Try again.");
             }
         }
 
-        // Function to get category text for display
         function getCategoryText(category) {
             switch (category) {
-                case "nicknames":
-                    return "Nicknames: nicknames";
-                case "breakfast":
-                    return "Breakfast: breakfast of champions";
-                case "farts":
-                    return "Farts: types of farts";
-                case "juice":
-                    return "Juice: types of juice";
-                default:
-                    return "";
+                case "nicknames": return "Nicknames: nicknames";
+                case "breakfast": return "Breakfast: breakfast of champions";
+                case "farts": return "Farts: types of farts";
+                case "juice": return "Juice: types of juice";
+                default: return "";
             }
         }
 
-        // Function to get categories where the user was 1 away
         function getOneAwayCategories() {
-            const oneAwayCategories = [];
-
-            for (const [category, words] of Object.entries(categories)) {
-                const correctWords = selectedBoxes.some(box => words.includes(box.textContent));
-                if (correctWords && selectedBoxes.length === 3) {
-                    oneAwayCategories.push(getCategoryText(category));
-                }
-            }
-
-            return oneAwayCategories;
+            return Object.entries(categories).filter(([category, words]) => selectedBoxes.some(box => words.includes(box.textContent)) && selectedBoxes.length === 3).map(([category]) => getCategoryText(category));
         }
 
-        // Function to check and enable/disable submit button
-        function checkSubmitButton() {
-            const submitButton = document.getElementById("submitBtn");
-            submitButton.disabled = selectedBoxes.length !== 4;
-        }
+        function checkSubmitButton() { document.getElementById("submitBtn").disabled = selectedBoxes.length !== 4; }
 
-        // Initialize the game on page load
         initializeGrid();
     </script>
 
