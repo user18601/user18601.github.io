@@ -158,8 +158,9 @@
             });
             selectedBoxes = [];
             checkSubmitButton();
+        }
 
-                // Function to handle correct category selection
+        // Function to handle correct category selection
         function handleCorrectSelection(category) {
             confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
