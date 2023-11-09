@@ -7,6 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
         }
 
         h1 {
@@ -27,15 +31,16 @@
             background-color: lightgray;
             border: 1px solid #ccc;
             user-select: none;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .box.selected {
             background-color: lightblue;
+            color: black;
         }
 
         .box.confirmed {
-            background-color: lightcoral;
+            transition: background-color 0.3s ease;
         }
 
         .submit-button {
@@ -74,7 +79,7 @@
 
         // Colors for each category
         const categoryColors = {
-            nicknames: "lightblue",
+            nicknames: "lightcyan",
             breakfast: "lightgreen",
             farts: "lightcoral",
             juice: "lightyellow"
@@ -160,6 +165,10 @@
             confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
             document.getElementById("grid").style.backgroundColor = categoryColors[category];
+            selectedBoxes.forEach(box => {
+                box.classList.add("confirmed");
+                box.style.backgroundColor = categoryColors[category];
+            });
             alert("Correct! " + getCategoryText(category));
         }
 
