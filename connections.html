@@ -82,7 +82,12 @@
 
         let selectedBoxes = [], confirmedBoxes = [], mistakesRemaining = 4;
 
-        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
 
         function initializeGrid() {
             const gridContainer = document.getElementById("grid");
@@ -99,14 +104,25 @@
         }
 
         function selectBox(box) {
-            if (confirmedBoxes.includes(box) || selectedBoxes.length === 4 || mistakesRemaining === 0) return;
-            selectedBoxes.includes(box) ? (selectedBoxes = selectedBoxes.filter(selectedBox => selectedBox !== box), box.classList.remove("selected")) : (selectedBoxes.push(box), box.classList.add("selected"));
+            if (confirmedBoxes.includes(box) || mistakesRemaining === 0) return;
+
+            if (selectedBoxes.includes(box)) {
+                selectedBoxes = selectedBoxes.filter(selectedBox => selectedBox !== box);
+                box.classList.remove("selected");
+            } else {
+                if (selectedBoxes.length < 4) {
+                    selectedBoxes.push(box);
+                    box.classList.add("selected");
+                }
+            }
+
             checkSubmitButton();
         }
 
         function submitSelection() {
             if (mistakesRemaining === 0) return;
             const correctCategory = Object.entries(categories).find(([category, words]) => selectedBoxes.every(box => words.includes(box.textContent)));
+
             if (correctCategory) {
                 handleCorrectSelection(correctCategory[0]);
                 if (confirmedBoxes.length === Object.values(categories).flat().length) {
@@ -116,7 +132,14 @@
             } else {
                 handleIncorrectSelection();
             }
-            selectedBoxes.forEach(box => { box.classList.remove("selected"); if (!confirmedBoxes.includes(box)) box.classList.remove("confirmed"); });
+
+            selectedBoxes.forEach(box => {
+                box.classList.remove("selected");
+                if (!confirmedBoxes.includes(box)) {
+                    box.classList.remove("confirmed");
+                }
+            });
+
             selectedBoxes = [];
             checkSubmitButton();
         }
@@ -124,8 +147,17 @@
         function handleCorrectSelection(category) {
             confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
-            selectedBoxes.forEach(box => { box.classList.add("confirmed"); box.style.backgroundColor = categoryColors[category]; });
+
+            selectedBoxes.forEach(box => {
+                box.classList.add("confirmed");
+                box.style.backgroundColor = categoryColors[category];
+            });
+
             alert("Correct! " + getCategoryText(category));
+
+            if (selectedBoxes.length === 3) {
+                alert("You were 1 away from guessing the category!");
+            }
         }
 
         function handleIncorrectSelection() {
@@ -153,14 +185,17 @@
         }
 
         function getOneAwayCategories() {
-            return Object.entries(categories).filter(([category, words]) => selectedBoxes.some(box => words.includes(box.textContent)) && selectedBoxes.length === 3).map(([category]) => getCategoryText(category));
+            return Object.entries(categories).filter(([category, words]) => selectedBoxes.every(box => words.includes(box.textContent)) && selectedBoxes.length === 3).map(([category]) => getCategoryText(category));
         }
 
-        function checkSubmitButton() { document.getElementById("submitBtn").disabled = selectedBoxes.length !== 4 || mistakesRemaining === 0; }
+        function checkSubmitButton() {
+            document.getElementById("submitBtn").disabled = selectedBoxes.length !== 4 || mistakesRemaining === 0;
+        }
 
         function disableGame() {
             document.getElementById("grid").classList.add("disabled");
             document.getElementById("submitBtn").classList.add("disabled");
+            document.querySelectorAll(".box").forEach(box => box.classList.add("disabled"));
         }
 
         initializeGrid();
