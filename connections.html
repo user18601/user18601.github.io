@@ -158,16 +158,15 @@
             });
             selectedBoxes = [];
             checkSubmitButton();
-        }
 
-        // Function to handle correct category selection
+                // Function to handle correct category selection
         function handleCorrectSelection(category) {
             confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
-            document.getElementById("grid").style.backgroundColor = categoryColors[category];
             selectedBoxes.forEach(box => {
                 box.classList.add("confirmed");
                 box.style.backgroundColor = categoryColors[category];
+                box.style.color = "black";
             });
             alert("Correct! " + getCategoryText(category));
         }
