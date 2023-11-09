@@ -26,6 +26,16 @@
             cursor: pointer;
             background-color: lightgray;
             border: 1px solid #ccc;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .box.selected {
+            background-color: lightblue;
+        }
+
+        .box.confirmed {
+            background-color: lightcoral;
         }
 
         .submit-button {
@@ -71,6 +81,7 @@
         };
 
         let selectedBoxes = [];
+        let confirmedBoxes = [];
         let mistakesRemaining = 4;
 
         // Function to shuffle an array randomly
@@ -98,11 +109,21 @@
 
         // Function to handle box selection
         function selectBox(box) {
-            if (selectedBoxes.length < 4) {
-                selectedBoxes.push(box);
-                box.style.backgroundColor = "lightgray"; // Change to selected color
-                checkSubmitButton();
+            if (confirmedBoxes.includes(box)) {
+                return; // Cannot reselect confirmed items
             }
+
+            if (selectedBoxes.includes(box)) {
+                // Unselect the box
+                selectedBoxes = selectedBoxes.filter(selectedBox => selectedBox !== box);
+                box.classList.remove("selected");
+            } else {
+                // Select the box
+                selectedBoxes.push(box);
+                box.classList.add("selected");
+            }
+
+            checkSubmitButton();
         }
 
         // Function to handle submit button click
@@ -124,13 +145,19 @@
             }
 
             // Reset for the next round
-            selectedBoxes.forEach(box => box.style.backgroundColor = "lightgray");
+            selectedBoxes.forEach(box => {
+                box.classList.remove("selected");
+                if (!confirmedBoxes.includes(box)) {
+                    box.classList.remove("confirmed");
+                }
+            });
             selectedBoxes = [];
             checkSubmitButton();
         }
 
         // Function to handle correct category selection
         function handleCorrectSelection(category) {
+            confirmedBoxes = confirmedBoxes.concat(selectedBoxes);
             document.getElementById("mistakes-count").innerText = mistakesRemaining;
             document.getElementById("grid").style.backgroundColor = categoryColors[category];
             alert("Correct! " + getCategoryText(category));
