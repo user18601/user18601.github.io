@@ -144,8 +144,13 @@
             if (mistakesRemaining === 0) {
                 document.getElementById("grid").style.backgroundColor = "lightgray";
                 alert("Game Over! You have run out of mistakes.");
-            } else {
-                alert("Incorrect! Try again.");
+            } else if (mistakesRemaining > 0) {
+                const oneAwayCategories = getOneAwayCategories();
+                if (oneAwayCategories.length > 0) {
+                    alert("Incorrect! You were 1 away from: " + oneAwayCategories.join(', '));
+                } else {
+                    alert("Incorrect! Try again.");
+                }
             }
         }
 
@@ -165,6 +170,20 @@
             }
         }
 
+        // Function to get categories where the user was 1 away
+        function getOneAwayCategories() {
+            const oneAwayCategories = [];
+
+            for (const [category, words] of Object.entries(categories)) {
+                const correctWords = selectedBoxes.some(box => words.includes(box.textContent));
+                if (correctWords && selectedBoxes.length === 3) {
+                    oneAwayCategories.push(getCategoryText(category));
+                }
+            }
+
+            return oneAwayCategories;
+        }
+
         // Function to check and enable/disable submit button
         function checkSubmitButton() {
             const submitButton = document.getElementById("submitBtn");
@@ -176,5 +195,4 @@
     </script>
 
 </body>
-    </html>
-    
+</html>
