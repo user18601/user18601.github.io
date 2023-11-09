@@ -22,59 +22,136 @@ function myFunction() {
   document.getElementById("pic").src = crispsPics[index];
   
 }
-</script>
-
-  <title>Selectable Grid</title>
   <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
     .box {
-      width: 50px;
-      height: 50px;
+      width: 100px;
+      height: 100px;
       border: 1px solid #000;
-      margin: 5px;
-      display: inline-block;
       text-align: center;
-      line-height: 50px;
+      line-height: 100px;
       cursor: pointer;
     }
     .selected {
       background-color: lightblue;
     }
+    #submit {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: not-allowed;
+    }
   </style>
 
+<h1><Connections 4 t dog</h1>
 
-
-<div id="grid">
-  <!-- Each box is given a unique id for identification -->
-  <div class="box" id="box1">1</div>
-  <div class="box" id="box2">2</div>
-  <div class="box" id="box3">3</div>
-  <div class="box" id="box4">4</div>
-  <div class="box" id="box5">5</div>
-  <div class="box" id="box6">6</div>
-  <div class="box" id="box7">7</div>
-  <div class="box" id="box8">8</div>
-  <div class="box" id="box9">9</div>
-  <div class="box" id="box10">10</div>
-  <div class="box" id="box11">11</div>
-  <div class="box" id="box12">12</div>
-  <div class="box" id="box13">13</div>
-  <div class="box" id="box14">14</div>
-  <div class="box" id="box15">15</div>
-  <div class="box" id="box16">16</div>
+<div id="mistakes-container">
+  <p>Mistakes remaining: <span id="mistakes">4</span></p>
 </div>
 
-<script>
-  // JavaScript code to handle selection
-  const boxes = document.querySelectorAll('.box');
+<div class="grid" id="grid">
+  <!-- Each box is given a unique id for identification -->
+  <div class="box" onclick="selectBox(this)">Goose</div>
+  <div class="box" onclick="selectBox(this)">nut</div>
+  <div class="box" onclick="selectBox(this)">bestie</div>
+  <div class="box" onclick="selectBox(this)">chicken</div>
+  <div class="box" onclick="selectBox(this)">kidney</div>
+  <div class="box" onclick="selectBox(this)">chickpea</div>
+  <div class="box" onclick="selectBox(this)">black eyed</div>
+  <div class="box" onclick="selectBox(this)">butter</div>
+  <div class="box" onclick="selectBox(this)">Egg</div>
+  <div class="box" onclick="selectBox(this)">silent</div>
+  <div class="box" onclick="selectBox(this)">deadly</div>
+  <div class="box" onclick="selectBox(this)">squelchy</div>
+  <div class="box" onclick="selectBox(this)">Lemon</div>
+  <div class="box" onclick="selectBox(this)">lime</div>
+  <div class="box" onclick="selectBox(this)">orange</div>
+  <div class="box" onclick="selectBox(this)">tomato</div>
+</div>
 
-  boxes.forEach(box => {
-    box.addEventListener('click', () => {
+<button id="submit" onclick="checkSelection()">Submit</button>
+
+<script>
+  let selectedBoxes = [];
+  let mistakesRemaining = 4;
+
+  function selectBox(box) {
+    if (selectedBoxes.length < 4) {
       box.classList.toggle('selected');
+      updateSubmitButton();
+    }
+  }
+
+  function updateSubmitButton() {
+    const submitButton = document.getElementById('submit');
+    submitButton.disabled = selectedBoxes.length !== 4;
+  }
+
+  function checkSelection() {
+    const categories = {
+      nicknames: ["Goose", "nut", "bestie", "chicken"],
+      breakfast: ["kidney", "chickpea", "black eyed", "butter"],
+      farts: ["Egg", "silent", "deadly", "squelchy"],
+      juice: ["Lemon", "lime", "orange", "tomato"]
+    };
+
+    const selectedCategories = [];
+
+    selectedBoxes.forEach(box => {
+      for (const [category, words] of Object.entries(categories)) {
+        if (words.includes(box.textContent)) {
+          selectedCategories.push(category);
+          break;
+        }
+      }
     });
-  });
+
+    if (selectedCategories.length === 1) {
+      alert(`Correct! You guessed the category: ${selectedCategories[0]}`);
+      selectedBoxes.forEach(box => box.classList.add(selectedCategories[0]));
+      resetGame();
+    } else {
+      mistakesRemaining--;
+      const message = (mistakesRemaining === 0) ? "You've lost!" : "Incorrect. Try again.";
+      alert(`${message} Mistakes remaining: ${mistakesRemaining}`);
+      
+      if (mistakesRemaining === 0) {
+        showCategories();
+      } else {
+        resetGame();
+      }
+    }
+
+    updateMistakes();
+  }
+
+  function updateMistakes() {
+    document.getElementById('mistakes').textContent = mistakesRemaining;
+  }
+
+  function resetGame() {
+    selectedBoxes.forEach(box => box.classList.remove('selected'));
+    selectedBoxes = [];
+    updateSubmitButton();
+  }
+
+  function showCategories() {
+    const grid = document.getElementById('grid');
+    for (const box of grid.children) {
+      for (const [category, words] of Object.entries(categories)) {
+        if (words.includes(box.textContent)) {
+          box.classList.add(category);
+          break;
+        }
+      }
+    }
+  }
 </script>
   
-
 </body>
 </html>
 
