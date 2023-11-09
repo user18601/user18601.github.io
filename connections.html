@@ -155,8 +155,9 @@
 
             alert("Correct! " + getCategoryText(category));
 
-            if (selectedBoxes.length === 3) {
-                alert("You were 1 away from guessing the category!");
+            const incompleteCategories = getIncompleteCategories();
+            if (incompleteCategories.length > 0) {
+                alert("You were 1 away from guessing a category!");
             }
         }
 
@@ -169,8 +170,7 @@
                 alert("Game Over! You have run out of mistakes.");
                 disableGame();
             } else if (mistakesRemaining > 0) {
-                const oneAwayCategories = getOneAwayCategories();
-                oneAwayCategories.length > 0 ? alert("Incorrect! You were 1 away. Try again.") : alert("Incorrect! Try again.");
+                alert("Incorrect! Try again.");
             }
         }
 
@@ -184,8 +184,13 @@
             }
         }
 
-        function getOneAwayCategories() {
-            return Object.entries(categories).filter(([category, words]) => selectedBoxes.every(box => words.includes(box.textContent)) && selectedBoxes.length === 3).map(([category]) => getCategoryText(category));
+        function getIncompleteCategories() {
+            return Object.entries(categories)
+                .filter(([category, words]) => {
+                    const selectedWordsInCategory = selectedBoxes.filter(box => words.includes(box.textContent));
+                    return selectedWordsInCategory.length === 3 && selectedWordsInCategory.every(box => !confirmedBoxes.includes(box));
+                })
+                .map(([category]) => category);
         }
 
         function checkSubmitButton() {
