@@ -64,7 +64,7 @@
 </head>
 <body>
 
-    <h1>Connectionsssss Game for T Dog</h1>
+    <h1>Connections Game for T Dog</h1>
     <div id="mistakes">Mistakes remaining: <span id="mistakes-count">4</span></div>
 
     <div class="grid-container" id="grid"></div>
@@ -73,7 +73,7 @@
     <script>
         const categories = {
             nicknames: ["Goose", "Nut", "Bestie", "Chicken"],
-            breakfast: ["Kidney", "Chickpea", "Black Eyed", "Butter"],
+            beans: ["Kidney", "Chickpea", "Black Eyed", "Butter"],
             farts: ["Egg", "Silent", "Deadly", "Squelchy"],
             juice: ["Lemon", "Lime", "Orange", "Tomato"]
         };
@@ -176,10 +176,10 @@
 
         function getCategoryText(category) {
             switch (category) {
-                case "nicknames": return "Nicknames: nicknames";
-                case "breakfast": return "Breakfast: breakfast of champions";
-                case "farts": return "Farts: types of farts";
-                case "juice": return "Juice: types of juice";
+                case "nicknames": return "Nicknames";
+                case "beans": return "Beans! The breakfast of champions";
+                case "farts": return "Types of farts";
+                case "juice": return "Types of juice";
                 default: return "";
             }
         }
