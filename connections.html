@@ -154,11 +154,6 @@
             });
 
             alert("Correct! " + getCategoryText(category));
-
-            const incompleteCategories = getIncompleteCategories();
-            if (incompleteCategories.length > 0) {
-                alert("You were 1 away from guessing a category!");
-            }
         }
 
         function handleIncorrectSelection() {
@@ -170,7 +165,12 @@
                 alert("Game Over! You have run out of mistakes.");
                 disableGame();
             } else if (mistakesRemaining > 0) {
-                alert("Incorrect! Try again.");
+                const incompleteCategories = getIncompleteCategories();
+                if (incompleteCategories.length > 0) {
+                    alert("You were 1 away from guessing a category!");
+                } else {
+                    alert("Incorrect! Try again.");
+                }
             }
         }
 
